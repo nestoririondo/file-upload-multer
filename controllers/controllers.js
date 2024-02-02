@@ -1,21 +1,15 @@
-import path from "path";
-import fs from "fs/promises";
 import pool from "../db/pool.js";
 
 export const postProfilePic = async (req, res) => {
-  if (!req.file) return res.sendStatus(400);
-  const oldPath = path.resolve(req.file.path);
-  const newPath = path.resolve(req.file.destination, req.file.originalname);
-  const encodedFilename = encodeURIComponent(req.file.originalname);
+  if (!req.file) return res.send(400).json({ message: "No file uploaded." });
   try {
-    await fs.rename(oldPath, newPath);
     const query = `INSERT INTO pictures (name, path) VALUES ($1, $2) RETURNING *`;
-    const values = [req.file.originalname, `/uploads/${encodedFilename}`];
+    const values = [req.file.originalname, `/uploads/${req.file.filename}`];
     const { rows } = await pool.query(query, values);
     res
       .status(201)
       .send(
-        `<div><h2>Here's the picture:</h2><img src='/uploads/${encodedFilename}'/></div>`
+        `<div><h2>Here's the picture:</h2><img src='/uploads/${req.file.filename}'/></div>`
       );
   } catch (error) {
     console.error(error);
@@ -24,20 +18,16 @@ export const postProfilePic = async (req, res) => {
 };
 
 export const postCatPics = async (req, res) => {
-  if (!req.files || req.files.length === 0) return res.sendStatus(400);
+  if (!req.files || req.files.length === 0) return res.send(400).json({ message: "No files uploaded." });
   const images = [];
   try {
     await Promise.all(
       req.files.map(async (file) => {
-        const encodedFilename = encodeURIComponent(file.originalname);
-        const oldPath = path.resolve(file.path);
-        const newPath = path.resolve(file.destination, file.originalname);
-        await fs.rename(oldPath, newPath);
         images.push(
-          `<img style="max-width: 100%" src='/uploads/${encodedFilename}'/>`
+          `<img style="max-width: 100%" src='/uploads/${file.filename}'/>`
         );
         const query = `INSERT INTO pictures (name, path) VALUES ($1, $2) RETURNING *`;
-        const values = [file.originalname, `/uploads/${encodedFilename}`];
+        const values = [file.originalname, `/uploads/${file.filename}`];
         const { rows } = await pool.query(query, values);
       })
     );

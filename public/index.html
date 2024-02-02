@@ -12,8 +12,9 @@
       method="POST"
     >
       <div>
-        <label>Select your profile picture:</label>
-        <input name="profile_pic" type="file" />
+        <label
+          >Select your profile picture: <input name="profile_pic" type="file"
+        /></label>
       </div>
       <div><input type="submit" value="Upload" /></div>
     </form>
@@ -22,12 +23,15 @@
     <br />
     <form action="/upload-cat-pics" enctype="multipart/form-data" method="POST">
       <div>
-        <label>Select your cat pictures:</label>
-        <input multiple="multiple" name="cat_pics" type="file" />
+        <label
+          >Select your cat pictures:
+          <input multiple="multiple" name="cat_pics" type="file"
+        /></label>
       </div>
       <div><input type="submit" value="Upload Cat Pics" /></div>
     </form>
     <br />
+    <hr />
     <a href="/get-pics">See all uploaded pictures</a>
   </body>
 </html>
