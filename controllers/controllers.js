@@ -12,7 +12,6 @@ export const postProfilePic = async (req, res) => {
     const query = `INSERT INTO pictures (name, path) VALUES ($1, $2) RETURNING *`;
     const values = [req.file.originalname, `/uploads/${encodedFilename}`];
     const { rows } = await pool.query(query, values);
-    console.log(rows[0]);
     res
       .status(201)
       .send(
@@ -40,7 +39,6 @@ export const postCatPics = async (req, res) => {
         const query = `INSERT INTO pictures (name, path) VALUES ($1, $2) RETURNING *`;
         const values = [file.originalname, `/uploads/${encodedFilename}`];
         const { rows } = await pool.query(query, values);
-        console.log(rows[0]);
       })
     );
     res

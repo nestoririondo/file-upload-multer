@@ -5,10 +5,8 @@ import 'dotenv/config';
 const app = express();
 const port = 3000;
 
-const path = "C:\\Users\\Néstor\\Documents\\MEGA\\MegaSyncFiles\\Coding\\Bootcamp\\Week_9\\file-upload-multer";
-
 app.use(express.json());
-app.use(express.static(path));
+app.use(express.static(process.env.STATIC_PATH));
 
 app.use("/", router);
 
